@@ -1,0 +1,18 @@
+# the default trash-cli completions don't work well for my liking so I made this
+# custom completion function. now you can trash-put file1 file2 f<TAB>
+
+_trash-put() {
+    _arguments \
+        '(-h --help)'{-h,--help}'[show help]' \
+        '(-f --force)'{-f,--force}'[silently ignore nonexistent files]' \
+        '(-i --interactive)'{-i,--interactive}'[prompt before every removal]' \
+        '(-r -R --recursive)'{-r,-R,--recursive}'[ignored for compatibility]' \
+        '(-d --directory)'{-d,--directory}'[ignored for compatibility]' \
+        '--trash-dir[use TRASHDIR as trash folder]:trash directory:_files -/' \
+        '(-v --verbose)'{-v,--verbose}'[explain what is being done]' \
+        '--version[show version]' \
+        '--print-completion[print shell completion script]' \
+        '*:file:_files'
+}
+
+compdef _trash-put trash-put
