@@ -11,10 +11,10 @@ if [[ -f "/usr/share/zsh/plugins/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
     source /usr/share/zsh/plugins/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme # AUR: zsh-theme-powerlevel10k-git
     
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-    source ${ZDOTDIR:-~}/.p10k.zsh
+    source "${ZDOTDIR:-~}/.p10k.zsh"
 else
-    if [ $UID = 0 ]; then
-        if [ $HOST = "mars" ]; then
+    if (( UID == 0 )); then
+        if [[ $HOST = mars ]]; then
             PS1='%F{red}%m%f %F{blue}%~ %#%f ' # simple prompt on my root user on my PC
         else # root user on servers
             PS1='%B%F{red}[%F{blue}%n%F{white}@%F{green}%M%F{red}]%F{white}:%F{magenta}%~%F{yellow}#%f%b '
@@ -25,14 +25,6 @@ else
 fi
 
 # FUNCTIONS AND ALIASES
-cd() { # cd to dir containing file
-    if [[ -f "$1" || -L "$1" ]]; then
-        builtin cd -- "${1:h}"
-    else
-        builtin cd -- "${@}"
-    fi
-}
-
 d() { # daemonize in the CLI
     nohup "${@}" >/dev/null 2>&1 </dev/null &
     disown
@@ -52,16 +44,16 @@ fzf-open-file() { # open file on default program using fzf
     xdg-open "./${file#./}" >/dev/null 2>&1
 }
 
+brave-me() { # messy way of doing split tunneling for brave
+    mullvad-exclude brave-origin --user-data-dir="$(mktemp -d)" --incognito --new-window "${@}"
+}
+
 lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
     if [[ -n "$WAYLAND_DISPLAY" || -n "$DISPLAY" || -n "$SSH_TTY" ]]; then
         command lsd "$@"
     else
         command lsd "$@" --icon=never
     fi
-}
-
-brave-me() { # messy way of doing split tunneling for brave
-    mullvad-exclude brave-origin --user-data-dir="$(mktemp -d)" --incognito --new-window "${@}"
 }
 
 alias ls="lsd --group-directories-first --date=relative"
@@ -78,6 +70,7 @@ alias ez="exec zsh"
 alias gs="git status"
 alias gd="git diff"
 alias gp="git push"
+alias ga="git add"
 alias h="history 0"
 alias rclone="rclone --progress"
 alias adb='HOME="$XDG_DATA_HOME"/android adb'
@@ -87,25 +80,26 @@ alias grep='grep --color=auto'
 alias diff='diff --color=auto'
 alias hugos="hugo server --noHTTPCache --gc --minify --disableFastRender --buildDrafts"
 alias cp="cp -r"
-alias fd="$(command -v fd || command -v fdfind) --hidden" # vvv OBRIGADO DEBIAN!
+alias fd="$(command -v fd || command -v fdfind) --hidden --exclude .git" # vvv OBRIGADO DEBIAN!
 alias cat="$(command -v bat || command -v batcat) --plain --theme TwoDark --paging never"
 alias nyx='sudo -u $(for u in tor debian-tor _tor; do id -u "$u" &>/dev/null && { echo "$u"; break; }; done) nyx'
 alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'
 alias sudo="sudo " # sudo <alias> resolves correctly
 alias doas="doas " # same thing when working on OpenBSD
-[ "$HOST" = "mars" ] && alias rm="trash-put" # mars is my PC
+[[ $HOST == mars ]] && alias rm="trash-put" # mars is my PC
+command -v zoxide >/dev/null 2>&1 && alias cd="z"
 
 # wordchars
 WORDCHARS="*?[]~&!#$%^(){}<>" # WORDCHARS="*?_-[]~=&!#$%^(){}<>"
 
+# editor
+export EDITOR="micro"
+
 # path
-typeset -U path
-path=(
-    $path
+path+=(
     "$HOME/.local/bin"
     "$HOME/.local/share/npm/bin"
 )
-export PATH
 
 # history on cache
 HISTSIZE=10000
@@ -119,7 +113,6 @@ setopt hist_reduce_blanks
 
 # other options
 setopt interactive_comments
-setopt auto_cd
 
 # Basic auto/tab complete:
 autoload -U compinit
@@ -154,9 +147,13 @@ source_first_available \
 source_first_available \
     /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
     /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
+z() { [[ -f "$1" || -L "$1" ]] && builtin cd -- "${1:h}" || __zoxide_z "$@" }
 
 # ZSH HIGHLIGHT COLOURS
 # fix for sudo/doas aliased to "sudo " not being recognized as precommand (1st world problem)
+# I gave up on underline and settled with bold because it adds an underline to the space after sudo
+# if i try to fix this then the command 'sudoedit' or anythign beginning with sudo splits into two colours which looks even worse
 ZSH_HIGHLIGHT_HIGHLIGHTERS+=(pattern)
 ZSH_HIGHLIGHT_PATTERNS+=('(#s)sudo ' 'fg=magenta,bold')
 ZSH_HIGHLIGHT_PATTERNS+=('(#s)doas ' 'fg=magenta,bold')
@@ -169,6 +166,15 @@ ZSH_HIGHLIGHT_STYLES[builtin]='fg=blue'
 ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan'
 ZSH_HIGHLIGHT_STYLES[function]='fg=cyan'
 ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=red'
+
+# fzf
+export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
+export FZF_DEFAULT_COMMAND='fd --hidden --exclude .git'
+
+# pager
+command -v moor >/dev/null 2>&1 && \
+    export PAGER="moor" \
+    export MANPAGER="moor"
 
 # cool logo...
 if [[ ( -z "$SKIP_FASTFETCH" && $UID != 0 ) || ( -z "$SKIP_FASTFETCH" && -n $SSH_TTY && $UID = 0 ) ]]; then
