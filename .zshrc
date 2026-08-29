@@ -14,8 +14,8 @@ if [[ -f "/usr/share/zsh/plugins/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
     source "${ZDOTDIR:-~}/.p10k.zsh"
 else
     if (( UID == 0 )); then
-        if [[ $HOST = mars ]]; then
-            PS1='%F{red}%m%f %F{blue}%~ %#%f ' # simple prompt on my root user on my PC
+        if [[ $HOST = mars ]]; then # gen2 inspired prompt on my root user on my PC
+            PS1='%F{red}%m%f %F{blue}%~ %#%f '
         else # root user on servers
             PS1='%B%F{red}[%F{blue}%n%F{white}@%F{green}%M%F{red}]%F{white}:%F{magenta}%~%F{yellow}#%f%b '
         fi
@@ -56,39 +56,42 @@ lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
     fi
 }
 
-alias ls="lsd --group-directories-first --date=relative"
-alias ll="lsd --group-directories-first --date=relative -lAFh"
-alias la="lsd --group-directories-first --date=relative -laFh"
-alias  l="lsd --group-directories-first --date=relative -lFh"
-alias LL="lsd --reverse --date=relative -lAFh --total-size --sort size"
-alias YAY="yay -Syu --devel"
-alias mkdir="mkdir -p"
-alias cx="chmod +x"
-alias vim="micro"
-alias ytcover="yt-dlp --write-thumbnail --skip-download"
-alias yt3="yt-dlp -f 251 -x --audio-format opus --embed-metadata --embed-thumbnail"
-alias ez="exec zsh"
-alias gs="git status"
-alias gd="git diff"
-alias gp="git push"
-alias ga="git add"
-alias h="history 0"
-alias rclone="rclone --progress"
-alias adb='HOME="$XDG_DATA_HOME"/android adb'
-alias ufw="sudo ufw" # ufw always needs root anyway
-alias ip="ip -c"
-alias grep='grep --color=auto'
-alias diff='diff --color=auto'
-alias hugos="hugo server --noHTTPCache --gc --minify --disableFastRender --buildDrafts"
-alias cp="cp -r"
-alias fd="$(command -v fd || command -v fdfind) --hidden --exclude .git" # vvv OBRIGADO DEBIAN!
-alias cat="$(command -v bat || command -v batcat) --plain --theme TwoDark --paging never"
-alias nyx='sudo -u $(for u in tor debian-tor _tor; do id -u "$u" &>/dev/null && { echo "$u"; break; }; done) nyx'
-alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'
-alias sudo="sudo " # sudo <alias> resolves correctly
-alias doas="doas " # same thing when working on OpenBSD
-[[ $HOST == mars ]] && alias rm="trash-put" # mars is my PC
-command -v zoxide >/dev/null 2>&1 && alias cd="z"
+[[ $HOST == mars && $EUID -ne 0 ]] && alias rm="trash-put"
+command -v zoxide >/dev/null 2>&1  && alias cd="z"
+alias ls="lsd --group-directories-first --date=relative" \
+      ll="lsd --group-directories-first --date=relative -lAFh" \
+      la="lsd --group-directories-first --date=relative -laFh" \
+       l="lsd --group-directories-first --date=relative -lFh" \
+      LL="lsd --reverse --date=relative -lAFh --total-size --sort size" \
+     YAY="yay -Syu --devel" \
+   mkdir="mkdir -p" \
+      cx="chmod +x" \
+     vim="micro" \
+     ytc="yt-dlp --write-thumbnail --skip-download" \
+     yt3="yt-dlp -f 251 -x --audio-format opus --embed-metadata --embed-thumbnail" \
+      ez="exec zsh" \
+      gs="git status" \
+      gd="git diff" \
+      gp="git push" \
+      ga="git add" \
+      gl="git log" \
+       h="history 0" \
+  rclone="rclone --progress" \
+     adb='HOME="$XDG_DATA_HOME"/android adb' \
+     ufw="sudo ufw" \
+      ip="ip -c" \
+  pacman="sudo pacman" \
+    grep='grep --color=auto' \
+    diff='diff --color=auto' \
+   hugos="hugo server --noHTTPCache --gc --minify --disableFastRender --buildDrafts" \
+      cp="cp -r" \
+      fd="$(command -v fd || command -v fdfind) --hidden --exclude .git" \
+     cat="$(command -v bat || command -v batcat) --plain --theme TwoDark --paging never" \
+     nyx='sudo -u $(for u in tor debian-tor _tor; do id -u "$u" &>/dev/null && { echo "$u"; break; }; done) nyx' \
+    wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"' \
+  ffmpeg="ffmpeg -hide_banner" \
+    sudo="sudo " \
+    doas="doas "
 
 # wordchars
 WORDCHARS="*?[]~&!#$%^(){}<>" # WORDCHARS="*?_-[]~=&!#$%^(){}<>"
@@ -130,7 +133,7 @@ zle -N self-insert url-quote-magic
 zle -N bracketed-paste bracketed-paste-magic
 
 # KEYBINDS
-bindkey '^?' backward-delete-char   # idk fix backspace ig
+bindkey '^?' backward-delete-char   # IDK fix backspace ig
 bindkey '^H' backward-kill-word     # ctrl backspace
 bindkey '^[[1;5D' backward-word     # Ctrl + Left
 bindkey '^[[1;5C' forward-word      # Ctrl + Right
@@ -154,7 +157,8 @@ z() { [[ -f "$1" || -L "$1" ]] && builtin cd -- "${1:h}" || __zoxide_z "$@" }
 # ZSH HIGHLIGHT COLOURS
 # fix for sudo/doas aliased to "sudo " not being recognized as precommand (1st world problem)
 # I gave up on underline and settled with bold because it adds an underline to the space after sudo
-# if i try to fix this then the command 'sudoedit' or anythign beginning with sudo splits into two colours which looks even worse
+# if i try to fix this then the command 'sudoedit' or anythign beginning with sudo splits into two
+# colours which looks even worse
 ZSH_HIGHLIGHT_HIGHLIGHTERS+=(pattern)
 ZSH_HIGHLIGHT_PATTERNS+=('(#s)sudo ' 'fg=magenta,bold')
 ZSH_HIGHLIGHT_PATTERNS+=('(#s)doas ' 'fg=magenta,bold')
