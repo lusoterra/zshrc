@@ -58,7 +58,8 @@ lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
 
 alias ls="lsd --group-directories-first --date=relative"
 alias ll="lsd --group-directories-first --date=relative -lAFh"
-alias  l="lsd --group-directories-first --date=relative -laFh"
+alias la="lsd --group-directories-first --date=relative -laFh"
+alias  l="lsd --group-directories-first --date=relative -lFh"
 alias LL="lsd --reverse --date=relative -lAFh --total-size --sort size"
 alias YAY="yay -Syu --devel"
 alias mkdir="mkdir -p"
