@@ -58,6 +58,8 @@ lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
 
 [[ $HOST == mars && $EUID -ne 0 ]] && alias rm="trash-put"
 command -v zoxide >/dev/null 2>&1  && alias cd="z"
+command -v advcp >/dev/null 2>&1   && alias cp="advcp -gr" || alias cp="cp -r"
+command -v advmv >/dev/null 2>&1   && alias mv="advmv -g"
 alias ls="lsd --group-directories-first --date=relative" \
       ll="lsd --group-directories-first --date=relative -lAFh" \
       la="lsd --group-directories-first --date=relative -laFh" \
@@ -84,8 +86,6 @@ alias ls="lsd --group-directories-first --date=relative" \
     grep='grep --color=auto' \
     diff='diff --color=auto' \
    hugos="hugo server --noHTTPCache --gc --minify --disableFastRender --buildDrafts" \
-      cp="advcp -gr" \
-      mv="advmv -g" \
       fd="$(command -v fd || command -v fdfind) --hidden --exclude .git" \
      cat="$(command -v bat || command -v batcat) --plain --theme TwoDark --paging never" \
      nyx='sudo -u $(for u in tor debian-tor _tor; do id -u "$u" &>/dev/null && { echo "$u"; break; }; done) nyx' \
