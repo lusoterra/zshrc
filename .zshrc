@@ -84,7 +84,8 @@ alias ls="lsd --group-directories-first --date=relative" \
     grep='grep --color=auto' \
     diff='diff --color=auto' \
    hugos="hugo server --noHTTPCache --gc --minify --disableFastRender --buildDrafts" \
-      cp="cp -r" \
+      cp="advcp -gr" \
+      mv="advmv -g" \
       fd="$(command -v fd || command -v fdfind) --hidden --exclude .git" \
      cat="$(command -v bat || command -v batcat) --plain --theme TwoDark --paging never" \
      nyx='sudo -u $(for u in tor debian-tor _tor; do id -u "$u" &>/dev/null && { echo "$u"; break; }; done) nyx' \
