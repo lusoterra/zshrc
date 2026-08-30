@@ -50,9 +50,9 @@ brave-me() { # messy way of doing split tunneling for brave
 
 lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
     if [[ -n "$WAYLAND_DISPLAY" || -n "$DISPLAY" || -n "$SSH_TTY" ]]; then
-        command lsd "$@"
+        command lsd "${@}"
     else
-        command lsd "$@" --icon=never
+        command lsd "${@}" --icon=never
     fi
 }
 
@@ -141,11 +141,13 @@ bindkey '^[[1;5C' forward-word      # Ctrl + Right
 bindkey '^[[3~' delete-char         # fix del key
 zle -N fzf-open-file                # custom function
 bindkey '^O' fzf-open-file          # custom function
+bindkey "^[[F" end-of-line
+bindkey "^[[H" beginning-of-line
 
 # LOAD PLUGINS
 [ -f "$ZDOTDIR/_trash-put" ] && source "$ZDOTDIR/_trash-put"
 command -v fzf >/dev/null 2>&1 && source <(fzf --zsh)
-source_first_available() { for f in "$@"; do [[ -f "$f" ]] && source "$f" && return; done }
+source_first_available() { for f in "${@}"; do [[ -f "$f" ]] && source "$f" && return; done }
 source_first_available \
     /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
     /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -153,7 +155,7 @@ source_first_available \
     /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
     /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
-z() { [[ -f "$1" || -L "$1" ]] && builtin cd -- "${1:h}" || __zoxide_z "$@" }
+z() { [[ -f "$1" || -L "$1" ]] && builtin cd -- "${1:h}" || __zoxide_z "${@}" }
 
 # ZSH HIGHLIGHT COLOURS
 # fix for sudo/doas aliased to "sudo " not being recognized as precommand (1st world problem)
