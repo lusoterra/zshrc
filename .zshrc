@@ -48,6 +48,14 @@ brave-me() { # messy way of doing split tunneling for brave
     mullvad-exclude brave-origin --user-data-dir="$(mktemp -d)" --incognito --new-window "${@}"
 }
 
+rm() { # trash-cli only to be used on mars, not on root user or sudo
+    if [[ $HOST == mars && $EUID -ne 0 && -z $SUDO_USER ]]; then
+        trash-put "${@}"
+    else
+        command rm "${@}"
+    fi
+}
+
 lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
     if [[ -n "$WAYLAND_DISPLAY" || -n "$DISPLAY" || -n "$SSH_TTY" ]]; then
         command lsd "${@}"
@@ -56,7 +64,6 @@ lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
     fi
 }
 
-[[ $HOST == mars && $EUID -ne 0 ]] && alias rm="trash-put"
 command -v zoxide >/dev/null 2>&1  && alias cd="z"
 command -v advcp >/dev/null 2>&1   && alias cp="advcp -gr" || alias cp="cp -r"
 command -v advmv >/dev/null 2>&1   && alias mv="advmv -g"
@@ -79,6 +86,7 @@ alias ls="lsd --group-directories-first --date=relative" \
       gl="git log" \
        h="history 0" \
   rclone="rclone --progress" \
+   rsync="rsync -avzhP" \
      adb='HOME="$XDG_DATA_HOME"/android adb' \
      ufw="sudo ufw" \
       ip="ip -c" \
