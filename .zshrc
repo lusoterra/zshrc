@@ -64,15 +64,17 @@ lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
     fi
 }
 
-command -v zoxide >/dev/null 2>&1  && alias cd="z"
-command -v advcp >/dev/null 2>&1   && alias cp="advcp -gr" || alias cp="cp -r"
-command -v advmv >/dev/null 2>&1   && alias mv="advmv -g"
+command -v zoxide >/dev/null 2>&1 && alias cd="z"
+command -v advcp >/dev/null 2>&1  && alias cp="advcp -gr" || alias cp="cp -r"
+command -v advmv >/dev/null 2>&1  && alias mv="advmv -g"
 alias ls="lsd --group-directories-first --date=relative" \
       ll="lsd --group-directories-first --date=relative -lAFh" \
       la="lsd --group-directories-first --date=relative -laFh" \
        l="lsd --group-directories-first --date=relative -lFh" \
       LL="lsd --reverse --date=relative -lAFh --total-size --sort size" \
+      ..="cd .." \
      YAY="yay -Syu --devel" \
+      RM="command rm" \
    mkdir="mkdir -p" \
       cx="chmod +x" \
      vim="micro" \
