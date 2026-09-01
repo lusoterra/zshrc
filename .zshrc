@@ -77,6 +77,7 @@ alias ls="lsd --group-directories-first --date=relative" \
    '\rm'='([ -n "$SUDO_USER" ] && [ $EUID != 0 ]) && command rm || "$REALRM"' \
      YAY="yay -Syu --devel" \
    mkdir="mkdir -p" \
+      dp="d dolphin ." \
       cx="chmod +x" \
      vim="micro" \
      ytc="yt-dlp --write-thumbnail --skip-download" \
