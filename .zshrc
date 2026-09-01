@@ -48,7 +48,8 @@ brave-me() { # messy way of doing split tunneling for brave
     mullvad-exclude brave-origin --user-data-dir="$(mktemp -d)" --incognito --new-window "${@}"
 }
 
-rm() { # trash-cli only to be used on mars, not on root user or sudo
+REALRM="$(which rm)"
+rm() { # trash-cli only to be used on mars, not by root or sudo
     if [[ $HOST == mars && $EUID -ne 0 && -z $SUDO_USER ]]; then
         trash-put "${@}"
     else
@@ -73,8 +74,8 @@ alias ls="lsd --group-directories-first --date=relative" \
        l="lsd --group-directories-first --date=relative -lFh" \
       LL="lsd --reverse --date=relative -lAFh --total-size --sort size" \
       ..="cd .." \
+   '\rm'='([ -n "$SUDO_USER" ] && [ $EUID != 0 ]) && command rm || "$REALRM"' \
      YAY="yay -Syu --devel" \
-      RM="command rm" \
    mkdir="mkdir -p" \
       cx="chmod +x" \
      vim="micro" \
@@ -177,6 +178,7 @@ ZSH_HIGHLIGHT_PATTERNS+=('(#s)sudo ' 'fg=magenta,bold')
 ZSH_HIGHLIGHT_PATTERNS+=('(#s)doas ' 'fg=magenta,bold')
 ZSH_HIGHLIGHT_PATTERNS+=('(#s)sudo(#e)' 'fg=magenta,bold')
 ZSH_HIGHLIGHT_PATTERNS+=('(#s)doas(#e)' 'fg=magenta,bold')
+ZSH_HIGHLIGHT_PATTERNS+=('\rm' 'fg=cyan') # fix \rm alias being detected as unknown token
 # other colours
 ZSH_HIGHLIGHT_STYLES[precommand]='fg=magenta,bold'
 ZSH_HIGHLIGHT_STYLES[command]='fg=cyan'
