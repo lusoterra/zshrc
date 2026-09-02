@@ -48,7 +48,7 @@ brave-me() { # messy way of doing split tunneling for brave
     mullvad-exclude brave-origin --user-data-dir="$(mktemp -d)" --incognito --new-window "${@}"
 }
 
-REALRM="$(which rm)"
+REALRM="$(command -v rm)" # yuck!
 rm() { # trash-cli only to be used on mars, not by root or sudo
     if [[ $HOST == mars && $EUID -ne 0 && -z $SUDO_USER ]]; then
         trash-put "${@}"
