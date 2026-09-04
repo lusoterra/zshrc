@@ -161,10 +161,12 @@ command -v fzf >/dev/null 2>&1 && source <(fzf --zsh)
 source_first_available() { for f in "${@}"; do [[ -f "$f" ]] && source "$f" && return; done }
 source_first_available \
     /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
-    /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+    /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source_first_available \
     /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
-    /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+    /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 z() { [[ -f "$1" || -L "$1" ]] && builtin cd -- "${1:h}" || __zoxide_z "${@}" }
 
