@@ -74,7 +74,7 @@ alias ls="lsd --group-directories-first --date=relative" \
        l="lsd --group-directories-first --date=relative -lFh" \
       LL="lsd --reverse --date=relative -lAFh --total-size --sort size" \
       ..="cd .." \
-   '\rm'='([ -n "$SUDO_USER" ] && [ $EUID != 0 ]) && command rm || "$REALRM"' \
+   '\rm'='[ -n "$SUDO_USER" ] && [ $EUID != 0 ] && command rm || "$REALRM"' \
      YAY="yay -Syu --devel" \
    mkdir="mkdir -p" \
       dp="d dolphin ." \
@@ -94,7 +94,6 @@ alias ls="lsd --group-directories-first --date=relative" \
      adb='HOME="$XDG_DATA_HOME"/android adb' \
      ufw="sudo ufw" \
       ip="ip -c" \
-  pacman="sudo pacman" \
     grep='grep --color=auto' \
     diff='diff --color=auto' \
    hugos="hugo server --noHTTPCache --gc --minify --disableFastRender --buildDrafts" \
