@@ -66,8 +66,9 @@ lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
 }
 
 command -v zoxide >/dev/null 2>&1 && alias cd="z"
-command -v advcp >/dev/null 2>&1  && alias cp="advcp -gr" || alias cp="cp -r"
-command -v advmv >/dev/null 2>&1  && alias mv="advmv -g"
+command -v moor   >/dev/null 2>&1 && alias less="moor"
+command -v advcp  >/dev/null 2>&1 && alias cp="advcp -gr" || alias cp="cp -r"
+command -v advmv  >/dev/null 2>&1 && alias mv="advmv -g"
 alias ls="lsd --group-directories-first --date=relative" \
       ll="lsd --group-directories-first --date=relative -lAFh" \
       la="lsd --group-directories-first --date=relative -laFh" \
@@ -82,6 +83,7 @@ alias ls="lsd --group-directories-first --date=relative" \
      vim="micro" \
      ytc="yt-dlp --write-thumbnail --skip-download" \
      yt3="yt-dlp -f 251 -x --audio-format opus --embed-metadata --embed-thumbnail" \
+     gdl="gallery-dl" \
       ez="exec zsh" \
       gs="git status" \
       gd="git diff" \
@@ -116,6 +118,12 @@ path+=(
     "$HOME/.local/bin"
     "$HOME/.local/share/npm/bin"
 )
+
+# XDG Locations (ssh sessions don't load from /etc/enviroment.d idk why)
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
 
 # history on cache
 HISTSIZE=10000
@@ -162,11 +170,13 @@ source_first_available() { for f in "${@}"; do [[ -f "$f" ]] && source "$f" && r
 source_first_available \
     /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
     /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
-    /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+    /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source_first_available \
     /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
     /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
-    /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+    /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 z() { [[ -f "$1" || -L "$1" ]] && builtin cd -- "${1:h}" || __zoxide_z "${@}" }
 
