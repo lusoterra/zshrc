@@ -12,6 +12,14 @@ if [[ -f "/usr/share/zsh/plugins/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
     
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     source "${ZDOTDIR:-~}/.p10k.zsh"
+
+    # zmx
+    prompt_my_zmx_session() {
+        if [[ -n $ZMX_SESSION ]]; then
+            p10k segment -b '%k' -f '%f' -t "[zmx: $ZMX_SESSION]"
+        fi
+    }
+    POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=my_zmx_session
 else
     if (( UID == 0 )); then
         if [[ $HOST = mars ]]; then # gen2 inspired prompt on my root user on my PC
@@ -21,6 +29,9 @@ else
         fi
     else # non root users on servers
         PS1='%B%F{red}[%F{blue}%n%F{white}@%F{green}%M%F{red}]%F{white}:%F{magenta}%~%F{yellow}%%%f%b '
+    fi
+    if [[ -n $ZMX_SESSION ]]; then # zmx
+        export PS1="[zmx: $ZMX_SESSION] ${PS1}"
     fi
 fi
 
