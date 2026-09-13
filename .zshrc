@@ -91,7 +91,7 @@ alias ls="lsd --group-directories-first --date=relative" \
    mkdir="mkdir -p" \
       dp="d dolphin ." \
       cx="chmod +x" \
-       m="micro" \
+     vim="micro" \
      ytc="yt-dlp --write-thumbnail --skip-download" \
      yt3="yt-dlp -f 251 -x --audio-format opus --embed-metadata --embed-thumbnail" \
      gdl="gallery-dl" \
