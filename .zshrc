@@ -84,6 +84,7 @@ alias ls="lsd --group-directories-first --date=relative" \
       ll="lsd --group-directories-first --date=relative -lAFh" \
       la="lsd --group-directories-first --date=relative -laFh" \
        l="lsd --group-directories-first --date=relative -lFh" \
+      l.="lsd --group-directories-first --date=relative -lhd .[^.]*" \
       LL="lsd --reverse --date=relative -lAFh --total-size --sort size" \
       ..="cd .." \
    '\rm'='[ -n "$SUDO_USER" ] && [ $EUID != 0 ] && command rm || "$REALRM"' \
