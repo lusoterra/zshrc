@@ -103,6 +103,7 @@ alias ls="lsd --group-directories-first --date=relative" \
       ga="git add" \
       gl="git log" \
        h="history 0" \
+     xxd="tinyxxd" \
   rclone="rclone --progress" \
    rsync="rsync -avzhP" \
      adb='HOME="$XDG_DATA_HOME"/android adb' \
