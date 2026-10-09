@@ -68,6 +68,15 @@ rm() { # trash-cli only to be used on mars, not by root or sudo
     fi
 }
 
+nightcore() {
+    command nightcore \
+        --autorename \
+        --quiet \
+        --cover "$HOME/Lossless Nightcore/oneone's High Quality Nightcore/cover.png" \
+        --tag-template "$HOME/Lossless Nightcore/pack-template.txt" \
+        "$@"
+}
+
 lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
     if [[ -n "$WAYLAND_DISPLAY" || -n "$DISPLAY" || -n "$SSH_TTY" ]]; then
         command lsd "${@}"
@@ -120,7 +129,7 @@ alias \
      ffmpeg="ffmpeg -hide_banner" \
      ffprobe="ffprobe -hide_banner" \
      ffplay="ffplay -hide_banner" \
-  nightcore="nightcore -q --cover \"\$HOME/Lossless Nightcore/oneone's High Quality Nightcore/cover.png\" --tag-template \"\$HOME/Lossless Nightcore/pack-template.txt\""
+   opencode="bwrap-opencode" \
        sudo="sudo " \
        doas="doas "
 
@@ -183,6 +192,7 @@ zle -N fzf-open-file                # custom function
 bindkey '^O' fzf-open-file          # custom function
 bindkey "^[[F" end-of-line
 bindkey "^[[H" beginning-of-line
+bindkey '^X'   push-line-or-edit
 
 # LOAD PLUGINS
 [ -f "$ZDOTDIR/_trash-put" ] && source "$ZDOTDIR/_trash-put"
