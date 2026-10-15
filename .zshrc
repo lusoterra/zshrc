@@ -99,6 +99,7 @@ alias \
          ..="cd .." \
       '\rm'='[ -n "$SUDO_USER" ] && [ $EUID != 0 ] && command rm || "$REALRM"' \
         YAY="yay -Syu --devel" \
+       NCDU="$(command -v sudo || command -v doas) ncdu --exclude /mnt --exclude /proc --exclude /sys --exclude /dev --exclude /run --exclude /tmp /" \
       mkdir="mkdir -p" \
          dp="d dolphin ." \
          cx="chmod +x" \
