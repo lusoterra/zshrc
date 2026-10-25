@@ -91,7 +91,7 @@ alias \
       '\rm'='[ -n "$SUDO_USER" ] && [ $EUID != 0 ] && command rm || "$REALRM"' \
         YAY="yay -Syu --devel" \
        NCDU="$(command -v sudo || command -v doas) ncdu --exclude /mnt --exclude /proc --exclude /sys --exclude /dev --exclude /run --exclude /tmp /" \
-  nightcore='command nightcore --autorename --quiet --cover "$HOME/Lossless Nightcore/oneone'\''s High Quality Nightcore/cover.png" --tag-template "$HOME/Lossless Nightcore/pack-template.txt"' \
+  nightcore='nightcore --autorename -q --cover "$HOME/Lossless Nightcore/oneone'\''s High Quality Nightcore/cover.png" --tag-template "$HOME/Lossless Nightcore/pack-template.txt"' \
       mkdir="mkdir -p" \
          dp="d dolphin ." \
          cx="chmod +x" \
@@ -122,7 +122,6 @@ alias \
      ffmpeg="ffmpeg -hide_banner" \
      ffprobe="ffprobe -hide_banner" \
      ffplay="ffplay -hide_banner" \
-   opencode="bwrap-opencode" \
        sudo="sudo " \
        doas="doas "
 
