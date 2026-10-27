@@ -46,7 +46,7 @@ hh() { # history grep
 }
 
 gm() { # easy commit messages for simple stuff
-    git commit -m "${*}"
+    git commit -m "${@}"
 }
 
 fzf-open-file() { # open file on default program using fzf
@@ -55,11 +55,7 @@ fzf-open-file() { # open file on default program using fzf
     xdg-open "./${file#./}" >/dev/null 2>&1
 }
 
-brave-me() { # messy way of doing split tunneling for brave
-    mullvad-exclude brave-origin --user-data-dir="$(mktemp -d)" --incognito --new-window "${@}"
-}
-
-REALRM="$(command -v rm)" # yuck!
+REALRM="$(command -v rm)" # ass
 rm() { # trash-cli only to be used on mars, not by root or sudo
     if [[ $HOST == mars && $EUID -ne 0 && -z $SUDO_USER ]]; then
         trash-put "${@}"
