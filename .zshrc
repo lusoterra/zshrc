@@ -134,6 +134,7 @@ path+=(
 )
 
 export GNUPGHOME="$XDG_DATA_HOME/gnupg" # ssh never sees /etc/environment.d, so set it here too
+export GPG_TTY=$(tty)
 [ -n $SSH_TTY ] && export GPG_TTY=$SSH_TTY
 
 # history on cache
