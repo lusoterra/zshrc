@@ -64,6 +64,15 @@ rm() { # trash-cli only to be used on mars, not by root or sudo
     fi
 }
 
+REALNIGHTCORE="$(command -v nightcore)" # ass 2
+nightcore() {
+    command nightcore \
+        --autorename \
+        --quiet \
+        --cover "$HOME/Lossless Nightcore/oneone's High Quality Nightcore/cover.png" \
+        --tag-template "$HOME/Lossless Nightcore/pack-template.txt" "$@"
+}
+
 lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
     if [[ -n "$WAYLAND_DISPLAY" || -n "$DISPLAY" || -n "$SSH_TTY" ]]; then
         command lsd "${@}"
@@ -77,52 +86,60 @@ command -v moor   >/dev/null 2>&1 && alias less="moor"
 command -v advcp  >/dev/null 2>&1 && alias cp="advcp -gr" || alias cp="cp -r"
 command -v advmv  >/dev/null 2>&1 && alias mv="advmv -g"
 alias \
-         ls="lsd --group-directories-first --date=relative" \
-         ll="lsd --group-directories-first --date=relative -lAFh" \
-         la="lsd --group-directories-first --date=relative -laFh" \
-          l="lsd --group-directories-first --date=relative -lFh" \
-         l.="lsd --group-directories-first --date=relative -lhd .[^.]*" \
-         LL="lsd --reverse --date=relative -lAFh --total-size --sort size" \
-         ..="cd .." \
-      '\rm'='[ -n "$SUDO_USER" ] && [ $EUID != 0 ] && command rm || "$REALRM"' \
-        YAY="yay -Syu --devel" \
-       NCDU="$(command -v sudo || command -v doas) ncdu --exclude /mnt --exclude /proc --exclude /sys --exclude /dev --exclude /run --exclude /tmp /" \
-  nightcore='nightcore --autorename -q --cover "$HOME/Lossless Nightcore/oneone'\''s High Quality Nightcore/cover.png" --tag-template "$HOME/Lossless Nightcore/pack-template.txt"' \
-      mkdir="mkdir -p" \
-         dp="d dolphin ." \
-         cx="chmod +x" \
-        vim="micro" \
-        ytc="yt-dlp --write-thumbnail --skip-download" \
-        yt3="yt-dlp -f 251 -x --audio-format opus --embed-metadata --embed-thumbnail" \
-        gdl="gallery-dl" \
-         ez="exec zsh" \
-         gs="git status" \
-         gd="git diff" \
-         gp="git push" \
-         ga="git add" \
-         gl="git log" \
-          h="history 0" \
-        xxd="tinyxxd" \
-     rclone="rclone --progress" \
-      rsync="rsync -avzhP" \
-        adb='HOME="$XDG_DATA_HOME"/android adb' \
-        ufw="sudo ufw" \
-         ip="ip -c" \
-       grep='grep --color=auto' \
-       diff='diff --color=auto' \
-      hugos="hugo server --noHTTPCache --gc --minify --disableFastRender --buildDrafts" \
-         fd="$(command -v fd || command -v fdfind) --hidden --exclude .git" \
-        cat="$(command -v bat || command -v batcat) --plain --theme TwoDark --paging never" \
-        nyx='sudo -u $(for u in tor debian-tor _tor; do id -u "$u" &>/dev/null && { echo "$u"; break; }; done) nyx' \
-       wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"' \
-     ffmpeg="ffmpeg -hide_banner" \
-     ffprobe="ffprobe -hide_banner" \
-     ffplay="ffplay -hide_banner" \
-       sudo="sudo " \
-       doas="doas "
+    '\nightcore'="$REALNIGHTCORE" \
+           '\rm'='[ -n "$SUDO_USER" ] && [ $EUID != 0 ] && command rm || "$REALRM"' \
+              ls="lsd --group-directories-first --date=relative" \
+              ll="lsd --group-directories-first --date=relative -lAFh" \
+              la="lsd --group-directories-first --date=relative -laFh" \
+               l="lsd --group-directories-first --date=relative -lFh" \
+              l.="lsd --group-directories-first --date=relative -lhd .[^.]*" \
+              LL="lsd --reverse --date=relative -lAFh --total-size --sort size" \
+              ..="cd .." \
+             YAY="yay -Syu --devel" \
+            NCDU="$(command -v sudo || command -v doas) ncdu --exclude /mnt --exclude /proc --exclude /sys --exclude /dev --exclude /run --exclude /tmp /" \
+           mkdir="mkdir -p" \
+              dp="d dolphin ." \
+              cx="chmod +x" \
+             vim="micro" \
+             ytc="yt-dlp --write-thumbnail --skip-download" \
+             yt3="yt-dlp -f 251 -x --audio-format opus --embed-metadata --embed-thumbnail" \
+             gdl="gallery-dl" \
+              ez="exec zsh" \
+              gs="git status" \
+              gd="git diff" \
+              gp="git push" \
+              ga="git add" \
+              gl="git log" \
+               h="history 0" \
+             xxd="tinyxxd" \
+          rclone="rclone --progress" \
+           rsync="rsync -avzhP" \
+             adb='HOME="$XDG_DATA_HOME"/android adb' \
+             ufw="sudo ufw" \
+              ip="ip -c" \
+            grep='grep --color=auto' \
+            diff='diff --color=auto' \
+           hugos="hugo server --noHTTPCache --gc --minify --disableFastRender --buildDrafts" \
+              fd="$(command -v fd || command -v fdfind) --hidden --exclude .git" \
+             cat="$(command -v bat || command -v batcat) --plain --theme TwoDark --paging never" \
+             nyx='sudo -u $(for u in tor debian-tor _tor; do id -u "$u" &>/dev/null && { echo "$u"; break; }; done) nyx' \
+            wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"' \
+          ffmpeg="ffmpeg -hide_banner" \
+          ffprobe="ffprobe -hide_banner" \
+          ffplay="ffplay -hide_banner" \
+            sudo="sudo " \
+            doas="doas "
 
 # wordchars
 WORDCHARS="*?[]~&!#$%^(){}<>" # WORDCHARS="*?_-[]~=&!#$%^(){}<>"
+
+# gnupg stuff
+export GNUPGHOME="$XDG_DATA_HOME/gnupg" # ssh never sees /etc/environment.d, so set it here too
+function my_gpg_init() {
+    export GPG_TTY="/dev/$(ps -p $$ -o tty= | tr -d ' ')"
+}
+add-zsh-hook precmd my_gpg_init
+[ -n $SSH_TTY ] && export GPG_TTY=$SSH_TTY
 
 # editor
 export EDITOR="micro"
@@ -132,10 +149,6 @@ path+=(
     "$HOME/.local/bin"
     "$HOME/.local/share/npm/bin"
 )
-
-export GNUPGHOME="$XDG_DATA_HOME/gnupg" # ssh never sees /etc/environment.d, so set it here too
-export GPG_TTY=$(tty)
-[ -n $SSH_TTY ] && export GPG_TTY=$SSH_TTY
 
 # history on cache
 HISTSIZE=10000
