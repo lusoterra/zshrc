@@ -133,22 +133,8 @@ path+=(
     "$HOME/.local/share/npm/bin"
 )
 
-# XDG Locations (ssh sessions don't load from /etc/environment.d idk why)
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_STATE_HOME="$HOME/.local/state"
-export XDG_CACHE_HOME="$HOME/.cache"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg" # ssh never sees /etc/environment.d, so set it here too
-
-# fix gpg on tty/ssh: terminal pinentry needs to know which tty to prompt on.
-# guard with tty -s so non-interactive shells (cron, scripts, opencode sandbox)
-# don't end up with GPG_TTY="not a tty". updatestartuptty tells the long-running
-# gpg-agent (which was likely started in your GUI session) about this shell's tty,
-# otherwise the curses/tty pinentry prompt goes to the wrong terminal or never appears.
-if tty -s; then
-    export GPG_TTY=$(tty)
-    gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
-fi
+[ -n $SSH_TTY ] && export GPG_TTY=$SSH_TTY
 
 # history on cache
 HISTSIZE=10000
