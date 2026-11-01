@@ -2,6 +2,7 @@ XDG_DATA_HOME=$HOME/.local/share
 XDG_CONFIG_HOME=$HOME/.config
 XDG_STATE_HOME=$HOME/.local/state
 XDG_CACHE_HOME=$HOME/.cache
+
 ICEAUTHORITY="$XDG_CACHE_HOME"/ICEauthority
 GTK2_RC_FILES="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
 GRADLE_USER_HOME="$XDG_DATA_HOME"/gradle
@@ -17,4 +18,5 @@ WINEPREFIX="$XDG_DATA_HOME"/wine/default
 _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 IDAUSR="$HOME/.local/share/idapro"
 CARGO_HOME="$XDG_DATA_HOME"/cargo
+
 WINEDEBUG=-all

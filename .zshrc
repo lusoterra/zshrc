@@ -99,8 +99,14 @@ alias \
             NCDU="$(command -v sudo || command -v doas) ncdu --exclude /mnt --exclude /proc --exclude /sys --exclude /dev --exclude /run --exclude /tmp /" \
            mkdir="mkdir -p" \
               dp="d dolphin ." \
+              dk="d konsole" \
               cx="chmod +x" \
+             bbl="bubbleload" \
              vim="micro" \
+              vi="micro" \
+            nano="micro" \
+              ed="micro" \
+            nvim="micro" \
              ytc="yt-dlp --write-thumbnail --skip-download" \
              yt3="yt-dlp -f 251 -x --audio-format opus --embed-metadata --embed-thumbnail" \
              gdl="gallery-dl" \
@@ -189,6 +195,27 @@ bindkey '^O' fzf-open-file          # custom function
 bindkey "^[[F" end-of-line
 bindkey "^[[H" beginning-of-line
 bindkey '^X'   push-line-or-edit
+
+bindkey '^[[H'  beginning-of-line
+bindkey '^[OH'  beginning-of-line
+bindkey '^[[1~' beginning-of-line
+bindkey '^[[F'  end-of-line
+bindkey '^[OF'  end-of-line
+bindkey '^[[4~' end-of-line
+
+autoload -U up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[5~' up-line-or-beginning-search
+bindkey '^[[6~' down-line-or-beginning-search
+
+paste-from-clipboard() {
+    local clip
+    clip=$(wl-paste --no-newline 2>/dev/null)
+    LBUFFER+="$clip"
+}
+zle -N paste-from-clipboard
+bindkey '^[[2~' paste-from-clipboard
 
 # LOAD PLUGINS
 [ -f "$ZDOTDIR/_trash-put" ] && source "$ZDOTDIR/_trash-put"
