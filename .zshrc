@@ -107,6 +107,7 @@ alias \
             nano="micro" \
               ed="micro" \
             nvim="micro" \
+           emacs="micro" \
              ytc="yt-dlp --write-thumbnail --skip-download" \
              yt3="yt-dlp -f 251 -x --audio-format opus --embed-metadata --embed-thumbnail" \
              gdl="gallery-dl" \
@@ -136,6 +137,12 @@ alias \
             sudo="sudo " \
             doas="doas "
 
+# xdg env
+XDG_DATA_HOME=$HOME/.local/share
+XDG_CONFIG_HOME=$HOME/.config
+XDG_STATE_HOME=$HOME/.local/state
+XDG_CACHE_HOME=$HOME/.cache
+
 # wordchars
 WORDCHARS="*?[]~&!#$%^(){}<>" # WORDCHARS="*?_-[]~=&!#$%^(){}<>"
 
@@ -147,13 +154,11 @@ function my_gpg_init() {
 add-zsh-hook precmd my_gpg_init
 [ -n $SSH_TTY ] && export GPG_TTY=$SSH_TTY
 
-# editor
-export EDITOR="micro"
-
 # path
 path+=(
     "$HOME/.local/bin"
     "$HOME/.local/share/npm/bin"
+    "/opt/cuda/bin/"
 )
 
 # history on cache
