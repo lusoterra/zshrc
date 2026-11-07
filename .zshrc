@@ -73,6 +73,14 @@ nightcore() {
         --tag-template "$HOME/Lossless Nightcore/pack-template.txt" "$@"
 }
 
+gm++() {
+    local last n
+    last=$(git log -1 --pretty=%s 2>/dev/null)
+    n=${last%%[!0-9]*}                # leading digits only
+    n=$(( 10#${n:-0} + 1 ))
+    git add -A && git commit -S -m "$n${1:+ $1}" && git push
+}
+
 lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
     if [[ -n "$WAYLAND_DISPLAY" || -n "$DISPLAY" || -n "$SSH_TTY" ]]; then
         command lsd "${@}"
@@ -173,6 +181,7 @@ setopt hist_reduce_blanks
 
 # other options
 setopt interactive_comments
+setopt autocd
 
 # Basic auto/tab complete:
 autoload -U compinit
