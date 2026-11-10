@@ -140,7 +140,7 @@ alias \
              nyx='sudo -u $(for u in tor debian-tor _tor; do id -u "$u" &>/dev/null && { echo "$u"; break; }; done) nyx' \
             wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"' \
           ffmpeg="ffmpeg -hide_banner" \
-          ffprobe="ffprobe -hide_banner" \
+         ffprobe="ffprobe -hide_banner" \
           ffplay="ffplay -hide_banner" \
             sudo="sudo " \
             doas="doas "
