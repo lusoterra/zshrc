@@ -204,6 +204,7 @@ bindkey '^H' backward-kill-word     # ctrl backspace
 bindkey '^[[1;5D' backward-word     # Ctrl + Left
 bindkey '^[[1;5C' forward-word      # Ctrl + Right
 bindkey '^[[3~' delete-char         # fix del key
+bindkey '^[[3;5~' kill-word        # ctrl delete
 zle -N fzf-open-file                # custom function
 bindkey '^O' fzf-open-file          # custom function
 bindkey "^[[F" end-of-line
