@@ -162,7 +162,9 @@ export GNUPGHOME="$XDG_DATA_HOME/gnupg" # ssh never sees /etc/environment.d, so 
 function my_gpg_init() {
     export GPG_TTY="/dev/$(ps -p $$ -o tty= | tr -d ' ')"
 }
-add-zsh-hook precmd my_gpg_init
+if [[ -z ${SSH_TTY:-} && ( -n ${WAYLAND_DISPLAY:-} || -n ${DISPLAY:-} ) ]]; then
+    add-zsh-hook precmd my_gpg_init
+fi
 [ -n $SSH_TTY ] && export GPG_TTY=$SSH_TTY
 
 # path
