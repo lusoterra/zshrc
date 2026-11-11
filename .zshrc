@@ -154,6 +154,9 @@ XDG_CACHE_HOME=$HOME/.cache
 # wordchars
 WORDCHARS="*?[]~&!#$%^(){}<>" # WORDCHARS="*?_-[]~=&!#$%^(){}<>"
 
+# autoload hooks
+autoload -Uz add-zsh-hook
+
 # gnupg stuff
 export GNUPGHOME="$XDG_DATA_HOME/gnupg" # ssh never sees /etc/environment.d, so set it here too
 function my_gpg_init() {
