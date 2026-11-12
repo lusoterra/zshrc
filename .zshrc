@@ -81,6 +81,14 @@ gm++() {
     git add -A && git commit -S -m "$n${1:+ $1}" && git push
 }
 
+ip() {
+    if ! command -v busybox >/dev/null 2>&1; then
+        command ip -c "$@"
+    else
+        command ip "$@"
+    fi
+}
+
 lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
     if [[ -n "$WAYLAND_DISPLAY" || -n "$DISPLAY" || -n "$SSH_TTY" ]]; then
         command lsd "${@}"
@@ -131,7 +139,6 @@ alias \
            rsync="rsync -avzhP" \
              adb='HOME="$XDG_DATA_HOME"/android adb' \
              ufw="sudo ufw" \
-              ip="ip -c" \
             grep='grep --color=auto' \
             diff='diff --color=auto' \
            hugos="hugo server --noHTTPCache --gc --minify --disableFastRender --buildDrafts" \
