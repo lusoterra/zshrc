@@ -7,6 +7,8 @@ if [ "$(uname -s)" = "FreeBSD" ]; then
     OS="freebsd"
 elif [ "$(uname -s)" = "OpenBSD" ]; then
     OS="openbsd"
+elif [ "$(uname -s)" = "Darwin" ]; then
+    OS="darwin"
 elif [ -f /etc/os-release ]; then
     # shellcheck disable=SC1091
     . /etc/os-release
@@ -14,6 +16,7 @@ elif [ -f /etc/os-release ]; then
         arch)   OS="arch" ;;
         debian) OS="debian" ;;
         alpine) OS="alpine" ;;
+        gentoo) OS="gentoo" ;;
     esac
 fi
 
@@ -57,6 +60,14 @@ case "$OS" in
         # zsh-autosuggestions, zoxide not available on openbsd fallbacks on zshrc ok
         pkg_add zsh zsh-syntax-highlighting bat fzf tree fastfetch git git-lfs \
             lsd micro rsync wget curl fd ffmpeg
+        ;;
+    darwin)
+        brew install zsh zsh-syntax-highlighting zsh-autosuggestions zoxide bat fzf \
+            tree fastfetch git git-lfs lsd micro rsync wget moor curl fd ffmpeg
+        ;;
+    gentoo)
+        emerge --ask n zsh zsh-syntax-highlighting zsh-autosuggestions zoxide bat fzf \
+            tree fastfetch git git-lfs lsd micro rsync wget moor curl fd ffmpeg
         ;;
 esac
 

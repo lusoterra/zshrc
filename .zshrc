@@ -1,5 +1,20 @@
+# .zshrc - do not use this abomination!
+# "Should" work on:
+# - Arch Linux
+# - Alpine Linux
+# - Gentoo Linux
+# - Debian GNU/Linux
+# - OpenBSD
+# - FreeBSD
+# - macOS
+
+source_first_available() { for f in "${@}"; do [[ -f "$f" ]] && source "$f" && return; done }
+
 # source p10k if it exists, otherwise use my old ass prompt from like 2022
-if [[ -f "/usr/share/zsh/plugins/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme" && -f "${ZDOTDIR:-~}/.p10k.zsh" ]]; then
+if [[ ( -f "/usr/share/zsh/plugins/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme" || \
+    -f "/opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme" ) && \
+    -f "${ZDOTDIR:-~}/.p10k.zsh" ]]
+then
     # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
     # Initialization code that may require console input (password prompts, [y/n]
     # confirmations, etc.) must go above this block; everything else may go below.
@@ -8,7 +23,9 @@ if [[ -f "/usr/share/zsh/plugins/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
     fi
 
     # source the theme
-    source /usr/share/zsh/plugins/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme # AUR: zsh-theme-powerlevel10k-git
+    source_first_available \
+        /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme \
+        /usr/share/zsh/plugins/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
     
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     source "${ZDOTDIR:-~}/.p10k.zsh"
@@ -22,7 +39,7 @@ if [[ -f "/usr/share/zsh/plugins/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
     POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=my_zmx_session
 else
     if (( UID == 0 )); then
-        if [[ $HOST = mars ]]; then # gen2 inspired prompt on my root user on my PC
+        if [[ $HOST = mars || $HOST = saturn ]]; then # gen2 inspired prompt on my root user on my PC
             PS1='%F{red}%m%f %F{blue}%~ %#%f '
         else # root user on servers
             PS1='%B%F{red}[%F{blue}%n%F{white}@%F{green}%M%F{red}]%F{white}:%F{magenta}%~%F{yellow}#%f%b '
@@ -33,6 +50,15 @@ else
     if [[ -n $ZMX_SESSION ]]; then # zmx
         export PS1="[zmx: $ZMX_SESSION] ${PS1}"
     fi
+fi
+
+# sudo/doas detection
+if command -v sudo >/dev/null 2>&1; then
+    SUDOBIN=sudo
+elif command -v doas >/dev/null 2>&1; then
+    SUDOBIN=doas
+else
+    SUDOBIN=
 fi
 
 # FUNCTIONS AND ALIASES
@@ -52,13 +78,23 @@ gm() { # easy commit messages for simple stuff
 fzf-open-file() { # open file on default program using fzf
     local file
     file=$(fd --type f --hidden --exclude .git . | fzf) || return
-    xdg-open "./${file#./}" >/dev/null 2>&1
+    if command -v xdg-open >/dev/null 2>&1; then
+        xdg-open "./${file#./}" >/dev/null 2>&1
+    else
+        open "./${file#./}" >/dev/null 2>&1
+    fi
 }
 
 REALRM="$(command -v rm)" # ass
 rm() { # trash-cli only to be used on mars, not by root or sudo
     if [[ $HOST == mars && $EUID -ne 0 && -z $SUDO_USER ]]; then
-        trash-put "${@}"
+        if command -v trash-put >/dev/null 2>&1; then
+            trash-put "${@}"
+        elif command -v trash >/dev/null 2>&1; then
+            trash "${@}"
+        else
+            command rm "${@}"
+        fi
     else
         command rm "${@}"
     fi
@@ -93,6 +129,7 @@ command -v zoxide >/dev/null 2>&1 && alias cd="z"
 command -v moor   >/dev/null 2>&1 && alias less="moor"
 command -v advcp  >/dev/null 2>&1 && alias cp="advcp -gr" || alias cp="cp -r"
 command -v advmv  >/dev/null 2>&1 && alias mv="advmv -g"
+[[ -n "$SUDOBIN" ]] && alias sudo="$SUDOBIN " doas="$SUDOBIN "
 [[ $(ip -V 2>&1) == "ip utility,"* ]] && alias ip='command ip -c'
 alias \
     '\nightcore'="$REALNIGHTCORE" \
@@ -141,9 +178,7 @@ alias \
             wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"' \
           ffmpeg="ffmpeg -hide_banner" \
          ffprobe="ffprobe -hide_banner" \
-          ffplay="ffplay -hide_banner" \
-            sudo="sudo " \
-            doas="doas "
+          ffplay="ffplay -hide_banner"
 
 # xdg env
 XDG_DATA_HOME=$HOME/.local/share
@@ -152,7 +187,7 @@ XDG_STATE_HOME=$HOME/.local/state
 XDG_CACHE_HOME=$HOME/.cache
 
 # wordchars
-WORDCHARS="*?[]~&!#$%^(){}<>" # WORDCHARS="*?_-[]~=&!#$%^(){}<>"
+WORDCHARS="*[]~$^(){}<>" # separators: ? & % # = ; , + @ ! (removed from words)
 
 # autoload hooks
 autoload -Uz add-zsh-hook
@@ -214,6 +249,8 @@ zle -N fzf-open-file                # custom function
 bindkey '^O' fzf-open-file          # custom function
 bindkey "^[[F" end-of-line
 bindkey "^[[H" beginning-of-line
+bindkey '^Z'   undo
+bindkey '^Y'   redo
 bindkey '^X'   push-line-or-edit
 
 bindkey '^[[H'  beginning-of-line
@@ -231,7 +268,13 @@ bindkey '^[[6~' down-line-or-beginning-search
 
 paste-from-clipboard() {
     local clip
-    clip=$(wl-paste --no-newline 2>/dev/null)
+    if command -v wl-paste >/dev/null 2>&1; then
+        clip=$(wl-paste --no-newline 2>/dev/null)
+    elif command -v pbpaste >/dev/null 2>&1; then
+        clip=$(pbpaste 2>/dev/null)
+    else
+        clip=$(xclip -o -selection clipboard 2>/dev/null || xsel -ob 2>/dev/null)
+    fi
     LBUFFER+="$clip"
 }
 zle -N paste-from-clipboard
@@ -240,7 +283,6 @@ bindkey '^[[2~' paste-from-clipboard
 # LOAD PLUGINS
 [ -f "$ZDOTDIR/_trash-put" ] && source "$ZDOTDIR/_trash-put"
 command -v fzf >/dev/null 2>&1 && source <(fzf --zsh)
-source_first_available() { for f in "${@}"; do [[ -f "$f" ]] && source "$f" && return; done }
 source_first_available \
     /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
     /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
