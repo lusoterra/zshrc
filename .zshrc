@@ -81,14 +81,6 @@ gm++() {
     git add -A && git commit -S -m "$n${1:+ $1}" && git push
 }
 
-ip() {
-    if ! command -v busybox >/dev/null 2>&1; then
-        command ip -c "$@"
-    else
-        command ip "$@"
-    fi
-}
-
 lsd() { # for some reason lsd --icon=auto is retarded doesn't know what a tty is
     if [[ -n "$WAYLAND_DISPLAY" || -n "$DISPLAY" || -n "$SSH_TTY" ]]; then
         command lsd "${@}"
@@ -101,6 +93,7 @@ command -v zoxide >/dev/null 2>&1 && alias cd="z"
 command -v moor   >/dev/null 2>&1 && alias less="moor"
 command -v advcp  >/dev/null 2>&1 && alias cp="advcp -gr" || alias cp="cp -r"
 command -v advmv  >/dev/null 2>&1 && alias mv="advmv -g"
+[[ $(ip -V 2>&1) == "ip utility,"* ]] && alias ip='command ip -c'
 alias \
     '\nightcore'="$REALNIGHTCORE" \
            '\rm'='[ -n "$SUDO_USER" ] && [ $EUID != 0 ] && command rm || "$REALRM"' \
