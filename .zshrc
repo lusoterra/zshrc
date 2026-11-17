@@ -140,9 +140,8 @@ alias \
                l="lsd --group-directories-first --date=relative -lFh" \
               l.="lsd --group-directories-first --date=relative -lhd .[^.]*" \
               LL="lsd --reverse --date=relative -lAFh --total-size --sort size" \
-              ..="cd .." \
              YAY="yay -Syu --devel" \
-            NCDU="$(command -v sudo || command -v doas) ncdu --exclude /mnt --exclude /proc --exclude /sys --exclude /dev --exclude /run --exclude /tmp /" \
+            NCDU="sudo ncdu --exclude /mnt --exclude /proc --exclude /sys --exclude /dev --exclude /run --exclude /tmp /" \
            mkdir="mkdir -p" \
               dp="d dolphin ." \
               dk="d konsole" \
@@ -154,6 +153,7 @@ alias \
               ed="micro" \
             nvim="micro" \
            emacs="micro" \
+              yt="yt-dlp" \
              ytc="yt-dlp --write-thumbnail --skip-download" \
              yt3="yt-dlp -f 251 -x --audio-format opus --embed-metadata --embed-thumbnail" \
              gdl="gallery-dl" \
@@ -168,7 +168,6 @@ alias \
           rclone="rclone --progress" \
            rsync="rsync -avzhP" \
              adb='HOME="$XDG_DATA_HOME"/android adb' \
-             ufw="sudo ufw" \
             grep='grep --color=auto' \
             diff='diff --color=auto' \
            hugos="hugo server --noHTTPCache --gc --minify --disableFastRender --buildDrafts" \
@@ -244,7 +243,7 @@ bindkey '^H' backward-kill-word     # ctrl backspace
 bindkey '^[[1;5D' backward-word     # Ctrl + Left
 bindkey '^[[1;5C' forward-word      # Ctrl + Right
 bindkey '^[[3~' delete-char         # fix del key
-bindkey '^[[3;5~' kill-word        # ctrl delete
+bindkey '^[[3;5~' kill-word         # ctrl delete
 zle -N fzf-open-file                # custom function
 bindkey '^O' fzf-open-file          # custom function
 bindkey "^[[F" end-of-line
@@ -265,20 +264,6 @@ zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 bindkey '^[[5~' up-line-or-beginning-search
 bindkey '^[[6~' down-line-or-beginning-search
-
-paste-from-clipboard() {
-    local clip
-    if command -v wl-paste >/dev/null 2>&1; then
-        clip=$(wl-paste --no-newline 2>/dev/null)
-    elif command -v pbpaste >/dev/null 2>&1; then
-        clip=$(pbpaste 2>/dev/null)
-    else
-        clip=$(xclip -o -selection clipboard 2>/dev/null || xsel -ob 2>/dev/null)
-    fi
-    LBUFFER+="$clip"
-}
-zle -N paste-from-clipboard
-bindkey '^[[2~' paste-from-clipboard
 
 # LOAD PLUGINS
 [ -f "$ZDOTDIR/_trash-put" ] && source "$ZDOTDIR/_trash-put"
