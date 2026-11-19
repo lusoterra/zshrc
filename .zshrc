@@ -154,9 +154,9 @@ alias \
               ed="micro" \
             nvim="micro" \
            emacs="micro" \
-              yt="yt-dlp" \
+              yt="yt-dlp --embed-metadata --embed-thumbnail --embed-chapters --embed-info-json --embed-subs" \
              ytc="yt-dlp --write-thumbnail --skip-download" \
-             yt3="yt-dlp -f 251 -x --audio-format opus --embed-metadata --embed-thumbnail" \
+             yt3="yt -f 251 -x --audio-format opus" \
              gdl="gallery-dl" \
               ez="exec zsh" \
               gs="git status" \
