@@ -301,6 +301,9 @@ ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan'
 ZSH_HIGHLIGHT_STYLES[function]='fg=cyan'
 ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=red'
 
+# fix autosuggestion after pasting
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(bracketed-paste)
+
 # fzf
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
 export FZF_DEFAULT_COMMAND='fd --hidden --exclude .git'
