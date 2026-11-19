@@ -147,6 +147,7 @@ alias \
               dk="d konsole" \
               cx="chmod +x" \
              bbl="bubbleload" \
+        opencode="bubbleload -P . opencode" \
              vim="micro" \
               vi="micro" \
             nano="micro" \
